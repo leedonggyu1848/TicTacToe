@@ -1,6 +1,6 @@
-import DrawHelper from "./DrawHelper";
+import DrawHelper from "../helper/DrawHelper";
 import Renderable from "./Renderable";
-import Vector from "./Vector";
+import Vector from "../helper/Vector";
 
 export default class Outline implements Renderable {
     start: Vector;

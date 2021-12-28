@@ -1,8 +1,9 @@
 import Renderable from "./Renderable";
-import Vector from "./Vector";
+import Vector from "../helper/Vector";
 import Outline from "./Outline";
-import Circle from "./Circle";
-import CrossMark from "./CrossMark";
+import Circle from "./shape/Circle";
+import CrossMark from "./shape/CrossMark";
+import StoneManager from "./StoneManager";
 
 export default class GameManager implements Renderable {
     entities: Array<Renderable>;
@@ -16,9 +17,11 @@ export default class GameManager implements Renderable {
         this.entities = [];
         this.start = new Vector(0, 0);
         this.end = new Vector(width, height);
-        this.entities.push(new Outline(this.getStart(), this.getEnd()));
         this.width = width;
         this.height = height;
+
+        this.entities.push(new Outline(this.getStart(), this.getEnd()));
+        this.entities.push(new StoneManager());
         //test
         const blockSize = this.getBlockSize();
         const basis = new Vector(blockSize.x/2, blockSize.y/2);

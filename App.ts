@@ -1,4 +1,4 @@
-import GameManager from "./GameManager";
+import GameManager from "./renderable/GameManager";
 
 export default class App {
     gameManager: GameManager;
