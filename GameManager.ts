@@ -1,20 +1,36 @@
 import Renderable from "./Renderable";
 import Vector from "./Vector";
 import Outline from "./Outline";
+import Circle from "./Circle";
+import CrossMark from "./CrossMark";
 
 export default class GameManager implements Renderable {
     entities: Array<Renderable>;
     private offset: number = 10;
     private start: Vector;
     private end: Vector;
-
+    private width: number;
+    private height: number;
+    
     constructor(width: number, height: number) {
         this.entities = [];
         this.start = new Vector(0, 0);
         this.end = new Vector(width, height);
         this.entities.push(new Outline(this.getStart(), this.getEnd()));
+        this.width = width;
+        this.height = height;
+        //test
+        const blockSize = this.getBlockSize();
+        const basis = new Vector(blockSize.x/2, blockSize.y/2);
+        this.entities.push(new Circle(
+            this.getStart().plus(basis),
+            Math.min(blockSize.x/2, blockSize.y/2)-10
+        ));
+        this.entities.push(new CrossMark(
+            this.getStart().plus(basis),
+            Math.min(blockSize.x/2, blockSize.y/2)-10))
     }
-    
+
     setOffset(offset: number) {
         this.offset = offset;
     }
@@ -25,6 +41,18 @@ export default class GameManager implements Renderable {
 
     getEnd(){
         return this.end.minus(new Vector(this.offset, this.offset));
+    }
+
+    getWidth(){
+        return this.width - this.offset*2;
+    }
+
+    getHeight(){
+        return this.height - this.offset*2;
+    }
+
+    getBlockSize(){
+        return new Vector(this.getWidth()/3, this.getHeight()/3);
     }
 
     update = () => {

@@ -1,3 +1,4 @@
+//all methods are pure function
 export default class Vector {
     x: number;
     y: number;
@@ -7,21 +8,15 @@ export default class Vector {
         this.y = y;
     }
 
-    setX(x:number){
-        this.x = x;
-        return this;
-    }
-
-    setY(y:number){
-        this.y = y;
-        return this;
-    }
-
     minus(v: Vector){
         return new Vector(this.x - v.x, this.y - v.y);
     }
 
     plus(v: Vector){
         return new Vector(this.x + v.x, this.y + v.y);
+    }
+
+    mul(n: number){
+        return new Vector(this.x*n, this.y*n);
     }
 }
