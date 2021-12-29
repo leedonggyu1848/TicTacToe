@@ -1,61 +1,47 @@
 import Renderable from "./Renderable";
 import Vector from "../helper/Vector";
-import Outline from "./Outline";
-import Circle from "./shape/Circle";
-import CrossMark from "./shape/CrossMark";
-import StoneManager from "./StoneManager";
 
 export default class GameManager implements Renderable {
     entities: Array<Renderable>;
+
     private offset: number = 10;
-    private start: Vector;
-    private end: Vector;
+    private offsetVector: Vector = new Vector(this.offset, this.offset);
+    private gameStartPosition: Vector;
+    private gameEndPosition: Vector;
+    private infoStartPosition: Vector;
+    private infoEndPosition:Vector;
     private width: number;
     private height: number;
     
     constructor(width: number, height: number) {
         this.entities = [];
-        this.start = new Vector(0, 0);
-        this.end = new Vector(width, height);
+        this.gameStartPosition = new Vector(0, 0);
+        this.gameEndPosition = new Vector(height, height);
+        this.infoStartPosition = new Vector(height, 0);
+        this.infoEndPosition = new Vector(height+(width-height)/2, height);
         this.width = width;
         this.height = height;
-
-        this.entities.push(new Outline(this.getStart(), this.getEnd()));
-        this.entities.push(new StoneManager());
-        //test
-        const blockSize = this.getBlockSize();
-        const basis = new Vector(blockSize.x/2, blockSize.y/2);
-        this.entities.push(new Circle(
-            this.getStart().plus(basis),
-            Math.min(blockSize.x/2, blockSize.y/2)-10
-        ));
-        this.entities.push(new CrossMark(
-            this.getStart().plus(basis),
-            Math.min(blockSize.x/2, blockSize.y/2)-10))
     }
 
     setOffset(offset: number) {
         this.offset = offset;
+        this.offsetVector = new Vector(this.offset, this.offset);
     }
 
-    getStart(){
-        return this.start.plus(new Vector(this.offset, this.offset));
+    getGameStartPosition(){
+        return this.gameStartPosition.plus(this.offsetVector);
     }
 
-    getEnd(){
-        return this.end.minus(new Vector(this.offset, this.offset));
+    getGameEndPosition(){
+        return this.gameEndPosition.minus(this.offsetVector);
     }
 
-    getWidth(){
-        return this.width - this.offset*2;
+    getInfoStartPosition(){
+        return this.infoStartPosition.plus(this.offsetVector);
     }
-
-    getHeight(){
-        return this.height - this.offset*2;
-    }
-
-    getBlockSize(){
-        return new Vector(this.getWidth()/3, this.getHeight()/3);
+    
+    getInfoEndPosition(){
+        return this.infoEndPosition.minus(this.offsetVector);
     }
 
     update = () => {
@@ -65,6 +51,11 @@ export default class GameManager implements Renderable {
     }
 
     render = (context: CanvasRenderingContext2D) => {
+        context.beginPath();
+        context.fillStyle = 'rgba(255, 255, 255)';
+        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+        context.fill();
+
         for(let i=0; i<this.entities.length; ++i){
             this.entities[i].render(context);
         }
@@ -79,5 +70,9 @@ export default class GameManager implements Renderable {
         if (entityIndex > -1) {
             this.entities.splice(entityIndex, 1);
         }
+    }
+
+    reset(){
+        this.entities = [];
     }
 }
