@@ -1,11 +1,8 @@
 import GameManager from "./renderable/GameManager";
-import GameBoardLayout from "./renderable/layout/GameBoardLayout";
-import GameInfoLayout from "./renderable/layout/GameInfoLayout";
-import StoneManager from "./renderable/StoneManager";
 
 export default class App {
   gameManager: GameManager;
-  stoneManager: StoneManager;
+
 
   $ref: HTMLElement;
   $canvas: HTMLCanvasElement;
@@ -31,10 +28,6 @@ export default class App {
     this.$ref.appendChild(this.$canvas);
 
     this.gameManager = new GameManager(width, height);
-    this.stoneManager = new StoneManager(
-      this.gameManager.getGameStartPosition(),
-      this.gameManager.getGameEndPosition());
-
   }
 
   onMouseDown = (e: MouseEvent) => {
@@ -45,7 +38,7 @@ export default class App {
       if (e.target !== this.$canvas){
         return;
       }
-      this.stoneManager.getMouseEvent(e);
+      this.gameManager.getMouseEvent(e);
       this.handleRequestFrame = window.requestAnimationFrame(this.frameFunction);
     }
   }
@@ -53,17 +46,6 @@ export default class App {
   play() {
     window.addEventListener("mousedown", this.onMouseDown);
     this.gameManager.reset();
-    this.stoneManager.reset();
-
-    this.gameManager.addEntity(new GameBoardLayout(
-      this.gameManager.getGameStartPosition(),
-      this.gameManager.getGameEndPosition()
-    ));
-    this.gameManager.addEntity(new GameInfoLayout(
-      this.gameManager.getInfoStartPosition(),
-      this.gameManager.getInfoEndPosition()
-    ));
-
     this.frameFunction = this.onEnterFrame;
     this.handleRequestFrame = window.requestAnimationFrame(this.frameFunction);
   }
@@ -74,14 +56,6 @@ export default class App {
 
   onEnterFrame = () => {
     this.gameManager.update();
-    this.stoneManager.update();
-
     this.gameManager.render(this.context);
-    this.stoneManager.render(this.context);
-
-    if (this.stoneManager.winJudgment != -1) {
-      console.log(this.stoneManager.winJudgment);
-      this.pause();
-    }
   }
 }
