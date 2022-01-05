@@ -40,12 +40,18 @@ export default class GameManager implements Renderable {
   }
 
   getMouseEvent = (e: MouseEvent) => {
-    this.stoneComponent.getMouseEvent(e);
+    this.stoneComponent.setMouseEvent(e);
   }
 
   update = () => {
     this.stoneComponent.update();
     this.scoreComponent.update();
+    const win = this.stoneComponent.getWinJudgment();
+    if (win !== -1){
+      this.scoreComponent.setWinJudgment(win);
+      this.stoneComponent.reset();
+      this.update();
+    }
   }
 
   render = (context: CanvasRenderingContext2D) => {

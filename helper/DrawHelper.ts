@@ -43,4 +43,12 @@ export default class DrawHelper {
       ctx.stroke();
     }
   }
+
+  static text(ctx: CanvasRenderingContext2D, pos: Vector, text: string, size: number){
+    ctx.beginPath();
+    ctx.textAlign = "center";
+    ctx.font = `${size}px gothic`;
+    ctx.fillStyle = "rgb(0, 0, 0)";
+    ctx.fillText(text, pos.x, pos.y);
+  }
 }
